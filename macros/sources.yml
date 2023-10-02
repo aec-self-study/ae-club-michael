@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: github
+  database: analytics-engineers-club
+    tables:
+      - name: pageviews
+        description: "This is the pageview events table"
+        columns:
+          - name: visitor_id
+            description: "This is visitor ID for a pageview event"
+            tests:
+              - unique
+              - not_null
