@@ -4,11 +4,15 @@ with customer_unique_id as (
     visitor_id,
     row_number() over (partition by customer_id order by visitor_id asc) as id_row_number
   from {{  source('github','pageviews')   }}
+  where customer_id is not null
 )
 
 select 
   m.id as id,
-  c.visitor_id as visitor_id,
+  case
+    when m.customer_id is not null then c.visitor_id
+    when m.customer_id is null then m.visitor_id
+  end as visitor_id,
   m.device_type as device_type,
   m.timestamp as timestamp,
   m.page as page,
