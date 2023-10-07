@@ -15,7 +15,8 @@ weekly_total as (
     customer_id,
     week,
     week_num,
-    sum(total) as revenue,
+    first_value(week) over (partition by customer_id order by week asc) as first_week,
+    sum(total) as revenue
   from week_number
   group by 1,2,3
 
@@ -26,6 +27,7 @@ final as (
 
   select
     customer_id,
+    first_week,
     week,
     week_num,
     revenue,
