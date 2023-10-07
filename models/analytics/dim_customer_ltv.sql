@@ -5,8 +5,7 @@ with week_number as (
     format_date('%F', date_trunc(created_at,week(Sunday))) as week,
     total,
     row_number() over (partition by customer_id order by date_trunc(created_at,week(Sunday)) asc) as week_num
-  from `analytics-engineers-club.coffee_shop.orders`
-
+  from {{ref('staging_orders')}}
 )
 ,
 
@@ -35,4 +34,4 @@ final as (
 
 )
 
-select * from cumulative_revenue_total
+select * from final

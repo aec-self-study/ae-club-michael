@@ -4,6 +4,7 @@ with customer_unique_id as (
     customer_id,
     visitor_id,
     row_number() over (partition by customer_id order by visitor_id asc) as id_row_number
+    from {{ source('analytics-engineers-club','pageviews') }}
 )
 ,
 
@@ -16,6 +17,7 @@ standard_customer_id as (
     m.timestamp as timestamp,
     m.page as page,
     m.customer_id as customer_id
+  from {{ source('analytics-engineers-club','pageviews') }}
   left join customer_unique_id c on m.customer_id = c.customer_id
   where c.id_row_number = 1
 
